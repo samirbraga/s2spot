@@ -5,6 +5,7 @@ from ttk import *
 from leftpanel import LeftPanel
 from rightpanel import RightPanel
 from navigate import Navigate
+from db.dbcontroller import DBController
 from components.pages import *
 
 def path_to(path):
@@ -14,12 +15,17 @@ def path_to(path):
 
 class App:
     def __init__(self, parent):
+        DBController.connect(database='acad', server="DESKTOP-LMO6LAE\SQLEXPRESS", user=None, password=None)
+
         self.parent = parent
         self.container = Frame(parent)
         self.container.pack(fill='both', expand=True)
 
         self.right_panel = RightPanel(self.container)
         Navigate.setContainer(self.right_panel.main_content.container)
+
+        Navigate.addPage(actived=False, key='rpl', kind='register', label="CADASTRAR PLAYLIST", component=registerplaylist.RegisterPlaylist(Navigate.container))
+        Navigate.addPage(actived=False, key='rsg', kind='register', label="CADASTRAR FAIXA", component=registersong.RegisterSong(Navigate.container))
 
         Navigate.addPage(actived=False, key='_sg', kind='single', label="FAIXA", component=song.Song(Navigate.container))
         Navigate.addPage(actived=False, key='sg', kind='list', label="FAIXAS", component=songs.Songs(Navigate.container))
@@ -32,4 +38,7 @@ class App:
         self.left_panel = LeftPanel(self.container)
 
         Navigate.goto('sg')
+        Navigate.setApp(self)
     
+    def exit(self):
+        self.parent.destroy()   

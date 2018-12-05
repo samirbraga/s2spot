@@ -72,3 +72,4 @@ class LeftPanel:
 
         self.exit_button = MenuButton(self.footer, "assets\\exit.gif", False)
         self.exit_button.pack(side='bottom', anchor='w', fill='y', expand=True)
+        self.exit_button.bind('<Button-1>', lambda _: Navigate.app.exit())

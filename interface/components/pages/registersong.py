@@ -5,12 +5,12 @@ from components.menubutton import MenuButton
 import Tkinter as tk
 from ttk import *
 
-class Interpreters(Component):
+class RegisterSong(Component):
     def __init__(self, parent):
-        super(Interpreters, self).__init__(parent)
+        super(RegisterSong, self).__init__(parent)
         self.container = Frame(parent, style="DarkGray.TFrame")
 
-        self.text = Button(self.container, text="Intérpretes")
+        self.text = Button(self.container, text="Cadastrar Faixa")
         self.text.pack()
 
     def pack(self):

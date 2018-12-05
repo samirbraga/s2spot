@@ -3,6 +3,7 @@ class Navigate(object):
     pages = []
     current_page = None
     current_data = None
+    app = None
 
     @classmethod
     def setContainer(self, container):
@@ -11,6 +12,10 @@ class Navigate(object):
     @classmethod
     def addPage(self, actived, key, kind, component, label,):
         Navigate.pages.append({ 'key': key, 'actived': actived, 'kind': kind, 'component': component, 'label': label })
+
+    @classmethod
+    def setApp(self, app):
+        Navigate.app = app
 
     @classmethod
     def goto(self, page_key, current_data=None):

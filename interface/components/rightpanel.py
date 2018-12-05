@@ -16,14 +16,20 @@ class MenuBar(Component):
         super(MenuBar, self).__init__(parent)
         self.container = Frame(parent, style="Gray.TFrame", height=75)
         self.container.pack_propagate(False)
-        self.functions = [{ 
-            'icon': "assets\\add-playlist.gif"
-        }, { 
-            'icon': "assets\\add-song.gif"
+        self.functions = [{
+            'icon': "assets\\add-song.gif",
+            'href': 'rpl'
+        }, {
+            'icon': "assets\\add-playlist.gif",
+            'href': 'rsg'
         }]
 
         for fn in self.functions:
-            MenuButton(self.container, fn['icon'])
+            def _(fn):
+                menu_btn = MenuButton(self.container, fn['icon'])
+                menu_btn.bind('<Button-1>', lambda _: Navigate.goto(fn['href']))
+
+            _(fn)
 
         self.header = Label(self.container, style='HeaderGray.TLabel')
         self.header.pack(side='left', fill='y', padx=(15, 0))
@@ -42,7 +48,19 @@ class ControlsBar(Component):
     def __init__(self, parent):
         super(ControlsBar, self).__init__(parent)
         self.container = Frame(parent, style="Gray.TFrame", height=75)
+        self.container.pack_propagate(False)
         self.pack()
+
+        self.nextBtn = MenuButton(
+            self.container, 'assets\\play-next-button.gif')
+        self.nextBtn.pack(anchor='center', fill='y')
+
+        self.playBtn = MenuButton(self.container, 'assets\\play-button.gif')
+        self.playBtn.pack(anchor='center', fill='y')
+
+        self.previousBtn = MenuButton(
+            self.container, 'assets\\play-previous-button.gif')
+        self.previousBtn.pack(anchor='center', fill='y')
     
     def pack(self):
         self.container.pack(fill='both')
