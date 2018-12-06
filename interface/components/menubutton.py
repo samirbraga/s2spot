@@ -33,6 +33,9 @@ class MenuButton(Component):
     def bind(self, evt, cb):
         self.container.bind(evt, cb)
 
+    def unbind(self, evt):
+        self.container.unbind(evt)
+
     def changeBg(self, bg):
         self.container.config(background=bg)
 

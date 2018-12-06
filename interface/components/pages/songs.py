@@ -20,146 +20,15 @@ class Songs(Component):
         self.songsList = Frame(self.container.interior, style="DarkGray.TFrame")
         self.songsList.pack(fill='x')
 
-        ListItem(self.songsList, ['Número', 'Descrição', 'Composição', 'Duração', 'Tipo'], None, True)
+        ListItem(self.songsList, ['Número', 'Nome', 'Álbum', 'Composição', 'Tipo', 'Descrição', 'Duração'], None, True)
 
     def loadContent(self):
-        DBController.execute('SELECT * FROM professor');
-        for row in DBController.get():
-            print("row= %r" % (row,))
-
-        self.songsData = [{
-            'number': 0,
-            'description': 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Officiis quidem voluptatibus delectus obcaecati, nobis et eligendi? Facilis sed enim eos vero itaque aut delectus, nostrum iste esse aspernatur. Unde, odio!',
-            'composition': 'Algo Laudo',
-            'time': 240000,
-            'record_type': 'ADD'
-        }, {
-            'number': 1,
-            'description': 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Officiis quidem voluptatibus delectus obcaecati, nobis et eligendi? Facilis sed enim eos vero itaque aut delectus, nostrum iste esse aspernatur. Unde, odio!',
-            'composition': 'Lorem LORD',
-            'time': 310000,
-            'record_type': 'DDD'
-        }, {
-            'number': 2,
-            'description': 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Officiis quidem voluptatibus delectus obcaecati, nobis et eligendi? Facilis sed enim eos vero itaque aut delectus, nostrum iste esse aspernatur. Unde, odio!',
-            'composition': 'Lord Huron',
-            'time': 200000,
-            'record_type': 'DDD'
-        }, {
-            'number': 3,
-            'description': 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Officiis quidem voluptatibus delectus obcaecati, nobis et eligendi? Facilis sed enim eos vero itaque aut delectus, nostrum iste esse aspernatur. Unde, odio!',
-            'composition': 'Kinds Leon',
-            'time': 320000,
-            'record_type': 'ADD'
-        }, {
-            'number': 1,
-            'description': 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Officiis quidem voluptatibus delectus obcaecati, nobis et eligendi? Facilis sed enim eos vero itaque aut delectus, nostrum iste esse aspernatur. Unde, odio!',
-            'composition': 'Lorem LORD',
-            'time': 310000,
-            'record_type': 'DDD'
-        }, {
-            'number': 2,
-            'description': 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Officiis quidem voluptatibus delectus obcaecati, nobis et eligendi? Facilis sed enim eos vero itaque aut delectus, nostrum iste esse aspernatur. Unde, odio!',
-            'composition': 'Lord Huron',
-            'time': 200000,
-            'record_type': 'DDD'
-        }, {
-            'number': 3,
-            'description': 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Officiis quidem voluptatibus delectus obcaecati, nobis et eligendi? Facilis sed enim eos vero itaque aut delectus, nostrum iste esse aspernatur. Unde, odio!',
-            'composition': 'Kinds Leon',
-            'time': 320000,
-            'record_type': 'ADD'
-        }, {
-            'number': 1,
-            'description': 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Officiis quidem voluptatibus delectus obcaecati, nobis et eligendi? Facilis sed enim eos vero itaque aut delectus, nostrum iste esse aspernatur. Unde, odio!',
-            'composition': 'Lorem LORD',
-            'time': 310000,
-            'record_type': 'DDD'
-        }, {
-            'number': 2,
-            'description': 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Officiis quidem voluptatibus delectus obcaecati, nobis et eligendi? Facilis sed enim eos vero itaque aut delectus, nostrum iste esse aspernatur. Unde, odio!',
-            'composition': 'Lord Huron',
-            'time': 200000,
-            'record_type': 'DDD'
-        }, {
-            'number': 3,
-            'description': 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Officiis quidem voluptatibus delectus obcaecati, nobis et eligendi? Facilis sed enim eos vero itaque aut delectus, nostrum iste esse aspernatur. Unde, odio!',
-            'composition': 'Kinds Leon',
-            'time': 320000,
-            'record_type': 'ADD'
-        }, {
-            'number': 1,
-            'description': 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Officiis quidem voluptatibus delectus obcaecati, nobis et eligendi? Facilis sed enim eos vero itaque aut delectus, nostrum iste esse aspernatur. Unde, odio!',
-            'composition': 'Lorem LORD',
-            'time': 310000,
-            'record_type': 'DDD'
-        }, {
-            'number': 2,
-            'description': 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Officiis quidem voluptatibus delectus obcaecati, nobis et eligendi? Facilis sed enim eos vero itaque aut delectus, nostrum iste esse aspernatur. Unde, odio!',
-            'composition': 'Lord Huron',
-            'time': 200000,
-            'record_type': 'DDD'
-        }, {
-            'number': 3,
-            'description': 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Officiis quidem voluptatibus delectus obcaecati, nobis et eligendi? Facilis sed enim eos vero itaque aut delectus, nostrum iste esse aspernatur. Unde, odio!',
-            'composition': 'Kinds Leon',
-            'time': 320000,
-            'record_type': 'ADD'
-        }, {
-            'number': 1,
-            'description': 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Officiis quidem voluptatibus delectus obcaecati, nobis et eligendi? Facilis sed enim eos vero itaque aut delectus, nostrum iste esse aspernatur. Unde, odio!',
-            'composition': 'Lorem LORD',
-            'time': 310000,
-            'record_type': 'DDD'
-        }, {
-            'number': 2,
-            'description': 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Officiis quidem voluptatibus delectus obcaecati, nobis et eligendi? Facilis sed enim eos vero itaque aut delectus, nostrum iste esse aspernatur. Unde, odio!',
-            'composition': 'Lord Huron',
-            'time': 200000,
-            'record_type': 'DDD'
-        }, {
-            'number': 3,
-            'description': 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Officiis quidem voluptatibus delectus obcaecati, nobis et eligendi? Facilis sed enim eos vero itaque aut delectus, nostrum iste esse aspernatur. Unde, odio!',
-            'composition': 'Kinds Leon',
-            'time': 320000,
-            'record_type': 'ADD'
-        }, {
-            'number': 1,
-            'description': 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Officiis quidem voluptatibus delectus obcaecati, nobis et eligendi? Facilis sed enim eos vero itaque aut delectus, nostrum iste esse aspernatur. Unde, odio!',
-            'composition': 'Lorem LORD',
-            'time': 310000,
-            'record_type': 'DDD'
-        }, {
-            'number': 2,
-            'description': 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Officiis quidem voluptatibus delectus obcaecati, nobis et eligendi? Facilis sed enim eos vero itaque aut delectus, nostrum iste esse aspernatur. Unde, odio!',
-            'composition': 'Lord Huron',
-            'time': 200000,
-            'record_type': 'DDD'
-        }, {
-            'number': 3,
-            'description': 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Officiis quidem voluptatibus delectus obcaecati, nobis et eligendi? Facilis sed enim eos vero itaque aut delectus, nostrum iste esse aspernatur. Unde, odio!',
-            'composition': 'Kinds Leon',
-            'time': 320000,
-            'record_type': 'ADD'
-        }, {
-            'number': 1,
-            'description': 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Officiis quidem voluptatibus delectus obcaecati, nobis et eligendi? Facilis sed enim eos vero itaque aut delectus, nostrum iste esse aspernatur. Unde, odio!',
-            'composition': 'Lorem LORD',
-            'time': 310000,
-            'record_type': 'DDD'
-        }, {
-            'number': 2,
-            'description': 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Officiis quidem voluptatibus delectus obcaecati, nobis et eligendi? Facilis sed enim eos vero itaque aut delectus, nostrum iste esse aspernatur. Unde, odio!',
-            'composition': 'Lord Huron',
-            'time': 200000,
-            'record_type': 'DDD'
-        }, {
-            'number': 3,
-            'description': 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Officiis quidem voluptatibus delectus obcaecati, nobis et eligendi? Facilis sed enim eos vero itaque aut delectus, nostrum iste esse aspernatur. Unde, odio!',
-            'composition': 'Kinds Leon',
-            'time': 320000,
-            'record_type': 'ADD'
-        }]
+        DBController.execute('''
+            SELECT f.cod, pl.nome, a.descricao, f.tipo_comp, f.tipo_grav, f.descricao, f.tempo_exec
+            FROM Faixa f INNER JOIN Playlist pl ON f.cod_alb=pl.cod
+            INNER JOIN Album a ON a.cod=f.cod_alb
+        ''')
+        self.songsData = list(DBController.get())
 
     def pack(self):
         for song in self.songsItems:
@@ -169,24 +38,30 @@ class Songs(Component):
 
         self.loadContent()
 
-        for song in self.songsData:
-            def _(song):
-                sec = timedelta(seconds=song['time']/1000)
-                dt = datetime(1, 1, 1) + sec
-                titles = [
-                    song['number'],
-                    " ".join(song['description'].split(' ')[0:5]) + '...',
-                    song['composition'],
-                    "%02d:%02d:%02d" % (dt.hour, dt.minute, dt.second),
-                    song['record_type']
-                ]
+        if len(self.songsData):
+            for song in self.songsData:
+                def _(song):
+                    sec = timedelta(seconds=song[6]/1000)
+                    dt = datetime(1, 1, 1) + sec
+                    titles = [
+                        song[0],
+                        song[1],
+                        song[2],
+                        song[3],
+                        song[4],
+                        " ".join(song[5].split(' ')[0:5]) + '...',
+                        "%02d:%02d:%02d" % (dt.hour, dt.minute, dt.second)
+                    ]
 
-                def gotoSong(_):
-                    Navigate.goto('_sg', song)
+                    def gotoSong(_):
+                        Navigate.goto('_sg', song)
 
-                self.songsItems.append(
-                    ListItem(self.songsList, titles, gotoSong))
+                    self.songsItems.append(
+                        ListItem(self.songsList, titles, gotoSong))
 
-            _(song)
+                _(song)
+        else:
+            self.songsItems.append(
+                ListItem(self.songsList, ['Nenhuma música cadastrada.'], lambda _: _))
 
         self.container.pack(expand=True, fill='both')   

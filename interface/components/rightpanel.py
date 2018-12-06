@@ -16,20 +16,21 @@ class MenuBar(Component):
         super(MenuBar, self).__init__(parent)
         self.container = Frame(parent, style="Gray.TFrame", height=75)
         self.container.pack_propagate(False)
-        self.functions = [{
-            'icon': "assets\\add-song.gif",
-            'href': 'rpl'
-        }, {
+        self.function = {
             'icon': "assets\\add-playlist.gif",
-            'href': 'rsg'
-        }]
+            'href': 'rpl'
+        }
+        self.menu_btn = MenuButton(self.container, self.function['icon'])
 
-        for fn in self.functions:
-            def _(fn):
-                menu_btn = MenuButton(self.container, fn['icon'])
-                menu_btn.bind('<Button-1>', lambda _: Navigate.goto(fn['href']))
+        def gotoRegister(page):
+            if page['kind'] == 'list':
+                self.menu_btn.pack()
+                self.menu_btn.unbind("<Button 1>")
+                self.menu_btn.bind('<Button-1>', lambda _: Navigate.goto("r%s"%(page['key'])))
+            else:
+                self.menu_btn.unpack()
 
-            _(fn)
+        Navigate.addListener("__all__", gotoRegister)
 
         self.header = Label(self.container, style='HeaderGray.TLabel')
         self.header.pack(side='left', fill='y', padx=(15, 0))

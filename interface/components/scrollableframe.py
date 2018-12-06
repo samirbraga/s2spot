@@ -7,7 +7,7 @@ class ScrollableFrame(Frame):
 
         vscrollbar = Scrollbar(self, orient='vertical')
         vscrollbar.pack(fill='y', side='right', expand=False)
-        canvas = tk.Canvas(self, bd=0, highlightthickness=0, yscrollcommand=vscrollbar.set)
+        canvas = tk.Canvas(self, bd=0, highlightthickness=0, yscrollcommand=vscrollbar.set, background="#333333")
         canvas.pack(side='left', fill='both', expand=True)
         vscrollbar.config(command=canvas.yview)
 

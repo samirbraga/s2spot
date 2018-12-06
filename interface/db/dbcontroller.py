@@ -9,8 +9,8 @@ class DBController:
 	def connect(self, database, server, user, password):
 		auth = ""
 		if user and password:
-			auth += "user=%s" % (user) 
-			auth += "pass=%s" % (password)
+			auth += "uid=%s;" % (user) 
+			auth += "pwd=%s" % (password)
 		else:
 			auth += "Trusted_Connection=yes"
 
@@ -21,9 +21,13 @@ class DBController:
 		DBController.cursor = DBController.cnxn.cursor()
 
 	@classmethod
-	def execute(self, query):
-		DBController.cursor.execute(query)
+	def execute(self, *query):
+		DBController.cursor.execute(*query)
 
 	@classmethod
 	def get(self):
 		return DBController.cursor
+	
+	@classmethod
+	def commit(self):
+		DBController.cnxn.commit()
