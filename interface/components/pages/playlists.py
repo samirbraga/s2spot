@@ -12,10 +12,11 @@ from components.scrollableframe import ScrollableFrame
 from components.menubutton import MenuButton
 
 class Playlists(Component):
-    def __init__(self, parent):
+    def __init__(self, parent, query=None):
         super(Playlists, self).__init__(parent)
         self.container = ScrollableFrame(parent, style="DarkGray.TFrame")
 
+        self.query = query
         self.playlistsItems = []
         self.playlistsList = Frame(self.container.interior, style="DarkGray.TFrame")
         self.playlistsList.pack(fill='x')
@@ -23,9 +24,12 @@ class Playlists(Component):
         ListItem(self.playlistsList, ['Número', 'Nome', 'Data de Criação', 'Tempo total'], None, True)
 
     def loadContent(self):
-        DBController.execute('''
-            select * from Playlist
-        ''')
+        query = self.query
+        if not self.query:
+            query = '''
+                select * from Playlist
+            '''
+        DBController.execute(query)
         self.playlistsData = list(DBController.get())
 
     def pack(self):

@@ -17,7 +17,7 @@ def path_to(path):
 
 class App(tk.Tk):
     def __init__(self, parent):
-        # DBController.connect(database='acad', server="LEC17\FBDSERVER", user='sa', password='Admin123')
+        # DBController.connect(database='S2spot', server="LEC17\FBDSERVER", user='sa', password='Admin123')
         DBController.connect(database='S2spot', server="DESKTOP-LMO6LAE\SQLEXPRESS", user=None, password=None)
 
         self.parent = parent
@@ -36,6 +36,8 @@ class App(tk.Tk):
         Navigate.addPage(actived=False, key='rit', kind='register', label="CADASTRAR INTÉRPRETE", component=registerinterpreter.RegisterInterpreter(Navigate.container))
 
         Navigate.addPage(actived=False, key='_sg', kind='single', label="FAIXA", component=song.Song(Navigate.container))
+        Navigate.addPage(actived=False, key='_pl', kind='single', label="PLAYLIST", component=playlist.Playlist(Navigate.container))
+        Navigate.addPage(actived=False, key='_ab', kind='single', label="ÁLBUM", component=album.Album(Navigate.container))
 
         Navigate.addPage(actived=False, key='sg', kind='list', label="FAIXAS", component=songs.Songs(Navigate.container))
         Navigate.addPage(actived=False, key='pl', kind='list', label="PLAYLISTS", component=playlists.Playlists(Navigate.container))

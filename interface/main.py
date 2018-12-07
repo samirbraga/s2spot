@@ -13,6 +13,7 @@ if __name__ == '__main__':
     style = Style()
     style.configure("Black.TButton", background="#0f0f0f", foreground="#000000", relief="flat")
     style.configure("Black.TFrame", background="#000000")
+    style.configure("Black.TLabel", background="#000000", foreground="#f1f2f3")
     style.configure("DarkGray.TFrame", background="#333333")
     style.configure("DarkGray.TLabel", background="#333333", foreground="#cccccc")
     style.configure("Gray.TFrame", background="#282828")

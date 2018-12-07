@@ -1,1 +1,1 @@
-__all__ = ["song"]
+__all__ = ["song", "playlist", "album"]

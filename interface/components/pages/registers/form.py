@@ -5,6 +5,7 @@ from components.navigate import Navigate
 from components.component import Component
 from components.menubutton import MenuButton
 import Tkinter as tk
+import tkMessageBox
 from ttk import *
 
 class TextInput(Component):
@@ -32,6 +33,18 @@ class TextInput(Component):
             self.options = option
 
     def pack(self):
+        if self.entry['type'] == 'select':
+            DBController.execute('''
+                SELECT %s, %s FROM %s
+            ''' % (self.entry['target_label'], self.entry['target_key'], self.entry['target']))
+            results = [("%d- %s" % (i, result[0]), result[1]) for i, result in enumerate(DBController.get())]
+            self.results = results
+            menu = self.input["menu"]
+            menu.delete(0, "end")
+            for string in self.results:
+                menu.add_command(label=string, 
+                                command=lambda value=string: self.options.set(value[0]))
+
         self.container.pack(fill='x', side='right')
         self.input.pack(side='right')
 
@@ -94,11 +107,14 @@ class Form(Component):
             else:
                 values.append(float(group.input.value()) if group.entry['type'] == 'int' else group.input.value())
 
-        DBController.execute('''
-            INSERT INTO %s (%s) VALUES (%s)
-        ''' % (self.table, ", ".join(columns), ", ".join(values_entries)), 
-            *values
-        )
-        DBController.commit()
-
-        Navigate.goto(Navigate.current_page['key'][1:])
+        try:
+            DBController.execute('''
+                INSERT INTO %s (%s) VALUES (%s)
+            ''' % (self.table, ", ".join(columns), ", ".join(values_entries)), 
+                *values
+            )
+            DBController.commit()
+        except Exception as e:
+            tkMessageBox.showinfo("ERRO!", "Um erro aparenta ter ocorrido, por favor, tente novamente. Veja-o abaixo:\n %s." % e)
+        else:
+            Navigate.goto(Navigate.current_page['key'][1:])

@@ -44,6 +44,7 @@ class Composers(Component):
             def _(composer):
                 dt1 = composer[5]
                 dt2 = composer[6]
+                last_t = "%02d/%02d/%02d" % (dt2.day, dt2.month, dt2.year) if dt2 else 'VIVO'
                 titles = [
                     composer[0],
                     composer[1],
@@ -51,7 +52,7 @@ class Composers(Component):
                     composer[3],
                     composer[4],
                     "%02d/%02d/%02d" % (dt1.day, dt1.month, dt1.year),
-                    "%02d/%02d/%02d" % (dt2.day, dt2.month, dt2.year)
+                    last_t
                 ]
 
                 def gotocomposer(_):

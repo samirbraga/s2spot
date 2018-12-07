@@ -45,7 +45,7 @@ USE S2spot
 CREATE TABLE Playlist(
 	cod smallint not null,
 	nome varchar(50) not null unique,
-	data_criacao date not null default CONVERT (date, SYSDATETIME()),
+	data_criacao date not null default CONVERT(date, SYSDATETIME()),
 	tempo_total real not null default 0.0,
 	CONSTRAINT PKPlaylist PRIMARY KEY(cod)
 ) ON S2spot_fg02
@@ -107,7 +107,7 @@ CREATE TABLE Album(
 	cod smallint not null,
 	codgrav smallint not null,
 	pr_compra real not null,
-	data_compra date not null,
+	data_compra date not null DEFAULT CONVERT(date, SYSDATETIME()),
 	data_grav date not null,
 	tipo_compra	varchar(20) not null, 
 	descricao varchar(30) not null,
@@ -121,7 +121,7 @@ CREATE TABLE Faixa(
 	cod smallint not null,
 	cod_alb smallint not null,
 	tipo_comp smallint not null,
-	tempo_exec time not null,
+	tempo_exec SMALLINT not null,
 	tipo_grav varchar(3) not null,
 	descricao varchar(50) not null,
 	CONSTRAINT PKFaixa PRIMARY KEY NONCLUSTERED (cod, cod_alb),
@@ -214,7 +214,7 @@ BEGIN
 		ROLLBACK TRANSACTION
 	END
 END
-
+ 
 GO
 CREATE TRIGGER gat_prc_alb ON Album
 AFTER INSERT, UPDATE
@@ -222,12 +222,9 @@ AS
 BEGIN
 	DECLARE @media_preco REAL
 
-	SELECT  @media_preco = AVG(pr_compra) FROM Album a
- 	INNER JOIN Faixa f ON a.cod = f.cod_alb 
-	GROUP BY cod_alb
-	HAVING NOT EXISTS(
-		SELECT * FROM Album a INNER JOIN Faixa f ON a.cod = f.cod_alb WHERE f.tipo_grav <> 'ADD'
-	)
+	SELECT @media_preco=AVG(pr_compra) FROM Album a
+ 	INNER JOIN Faixa f ON a.cod = f.cod_alb
+	WHERE EXISTS(SELECT * FROM Album a INNER JOIN Faixa f ON a.cod = f.cod_alb WHERE f.tipo_grav = 'DDD')
 
 	IF(SELECT pr_compra FROM inserted ) > 3 * @media_preco
 	BEGIN
@@ -255,24 +252,47 @@ AS
 BEGIN
 	DECLARE @tempo_duracao int
 	DECLARE @cod_play smallint
-	IF EXISTS (SELECT * FROM DELETED)
+
+	IF EXISTS (SELECT * FROM deleted)
 	BEGIN
-		SELECT @cod_play=cod_play FROM deleted
-		SELECT @tempo_duracao=sum(tempo_exec) FROM
-		faixa f INNER JOIN Playlist_Faixa pl ON f.cod=pl.cod_faixa
-		WHERE pl.cod_play=@cod_play;
-		SET @tempo_duracao = @tempo_duracao - (SELECT f2.tempo_exec FROM inserted i inner join Faixa f2 ON i.cod_faixa=f2.cod)
-		UPDATE Playlist SET tempo_total=CAST(@tempo_duracao AS real) WHERE cod=@cod_play
+		SELECT @cod_play = cod_play FROM deleted
+
+		SELECT @tempo_duracao = sum(tempo_exec) FROM
+		Faixa f INNER JOIN Playlist_Faixa pf ON f.cod = pf.cod_faixa AND f.cod_alb = pf.cod_alb
+		INNER JOIN Playlist p ON p.cod = pf.cod_play 
+		GROUP BY pf.cod_alb, pf.cod_faixa, pf.cod_play
+		HAVING pf.cod_play = @cod_play;
+
+		SET @tempo_duracao = @tempo_duracao - (SELECT f2.tempo_exec FROM deleted d 
+		INNER JOIN Faixa f2 ON d.cod_faixa = f2.cod AND d.cod_alb = f2.cod_alb)
+
+		UPDATE Playlist SET tempo_total = @tempo_duracao WHERE cod = @cod_play
 	END
 	ELSE
 	BEGIN
 		SELECT @cod_play=cod_play FROM inserted
-		SELECT @tempo_duracao=sum(tempo_exec) FROM
-		faixa f INNER JOIN Playlist_Faixa pl ON f.cod=pl.cod_faixa
-		WHERE pl.cod_play=@cod_play;
-		SET @tempo_duracao = @tempo_duracao + (SELECT f2.tempo_exec FROM inserted i inner join Faixa f2 ON i.cod_faixa=f2.cod)
-		UPDATE Playlist SET tempo_total=CAST(@tempo_duracao AS real) WHERE cod=@cod_play
+
+		SELECT @tempo_duracao = sum(tempo_exec) FROM Faixa f 
+		INNER JOIN Playlist_Faixa pf ON f.cod = pf.cod_faixa AND f.cod_alb = pf.cod_alb
+		INNER JOIN Playlist p ON p.cod = pf.cod_play 
+		GROUP BY pf.cod_alb, pf.cod_faixa, pf.cod_play
+		HAVING pf.cod_play = @cod_play;
+
+		SET @tempo_duracao = @tempo_duracao + (SELECT f2.tempo_exec FROM inserted i 
+		INNER JOIN Faixa f2 ON i.cod_faixa = f2.cod AND i.cod_alb = f2.cod_alb)
+
+		UPDATE Playlist SET tempo_total = @tempo_duracao WHERE cod=@cod_play
 	END
+END
+
+GO
+CREATE TRIGGER tr_adiciona_alb_faixa ON Faixa
+FOR INSERT
+AS
+BEGIN
+	DECLARE @cod_faixa smallint, @cod_alb smallint
+	SELECT @cod_faixa=cod, @cod_alb=cod_alb FROM inserted
+	INSERT INTO Alb_Faixa VALUES (@cod_faixa, @cod_alb)
 END
 
 -- Consultas --
@@ -288,7 +308,7 @@ inner join Compositor c ON fc.cod_comp=c.cod
 GROUP BY g.cod, g.nome, a.cod
 HAVING EXISTS(
 	SELECT * FROM Faixa_Comp fc2 inner join Compositor c2 ON fc2.cod_comp=c2.cod
-	WHERE fc2.cod_alb=a.cod AND c2.nome='Dvorack'
+	WHERE fc2.cod_alb=a.cod AND c2.nome='san'
 )
 
 SELECT c.nome FROM Compositor c 
@@ -301,4 +321,33 @@ HAVING count(distinct(f.cod)) = (SELECT max(R.contagem) FROM (SELECT count(*) as
 	inner join Faixa_Comp fc ON pf.cod_faixa=fc.cod_faixa AND pf.cod_alb=fc.cod_alb
 	where fc.cod_comp=c.cod
 	group by fc.cod_comp) as R)
+
+	-- Função necessária para a última consulta--
+
+	-- Retorna nome da playlist que tenha uma faixa diferente de barroco e concerto --
+GO
+CREATE FUNCTION fun_tp_con(@id_playlist smallint)
+RETURNS @table_rasult TABLE (nome_play varchar(40))
+AS
+BEGIN
+	INSERT INTO @table_rasult
+	SELECT p.nome FROM Playlist p 
+	INNER JOIN Playlist_Faixa pf ON p.cod = pf.cod_play AND p.cod = @id_playlist
+	INNER JOIN Faixa f ON pf.cod_faixa = f.cod AND f.cod_alb = pf.cod_alb
+	INNER JOIN Tipo_Comp tc ON tc.cod = f.tipo_comp
+	INNER JOIN Faixa_Comp fc ON f.cod = fc.cod_faixa AND f.cod_alb = fc.cod_alb
+	INNER JOIN Compositor c ON fc.cod_comp = c.cod
+	INNER JOIN Periodo_Musical pm ON pm.cod = c.pr_msc 
+	WHERE tc.descricao <> 'concerto' OR pm.descricao <> 'barroco'
+	RETURN 
+END
+
+SELECT p.nome FROM Playlist p 
+	INNER JOIN Playlist_Faixa pf ON p.cod = pf.cod_play
+	INNER JOIN Faixa f ON pf.cod_faixa = f.cod AND f.cod_alb = pf.cod_alb
+	INNER JOIN Tipo_Comp tc ON tc.cod = f.tipo_comp
+	INNER JOIN Faixa_Comp fc ON f.cod = fc.cod_faixa AND f.cod_alb = fc.cod_alb
+	INNER JOIN Compositor c ON fc.cod_comp = c.cod
+	INNER JOIN Periodo_Musical pm ON pm.cod = c.pr_msc 
+	WHERE NOT EXISTS(SELECT * FROM dbo.fun_tp_con(p.cod))
 

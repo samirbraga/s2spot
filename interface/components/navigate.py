@@ -3,6 +3,7 @@ class Navigate(object):
     pages = []
     current_page = None
     current_data = None
+    current_search = ''
     app = None
 
     @classmethod

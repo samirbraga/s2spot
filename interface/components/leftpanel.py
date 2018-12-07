@@ -45,12 +45,24 @@ class LeftPanel:
         self.header.pack_propagate(False)
         self.header.pack(side='top', fill='x')
 
+        self.search_entry = Entry(self.header)
+        self.search_entry.pack(side='left')
         self.search_button = MenuButton(self.header, "assets\\search.gif")
+
+        def search(_):
+            Navigate.current_search = self.search_entry.get()
+            Navigate.goto('sg')
+
+        self.search_button.bind('<Button-1>', search)
 
         list_pages = [page for page in Navigate.pages if page['kind'] == 'list']
 
+        def navigate(opt):
+            Navigate.goto(opt['key'])
+            Navigate.current_search = ''
+
         self.options_list = list(map(
-            lambda opt: OptionsList(self.container, opt['label'], lambda x: Navigate.goto(opt['key'])),
+            lambda opt: OptionsList(self.container, opt['label'], lambda x: navigate(opt)),
             list_pages
         ))
 
